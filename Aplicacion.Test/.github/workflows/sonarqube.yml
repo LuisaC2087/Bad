@@ -49,6 +49,6 @@ jobs:
 
           dotnet build
 
-          dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
           ${{ runner.temp }}\scanner\dotnet-sonarscanner end
