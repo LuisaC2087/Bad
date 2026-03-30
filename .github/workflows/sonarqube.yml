@@ -2,7 +2,7 @@
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -42,6 +42,13 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"LuisaC2087_Bad" /o:"luisac2087" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin `
+            /k:"LuisaC2087_BadCleanArch" `
+            /o:"luisac2087" `
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+
           dotnet build
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+          dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner end
