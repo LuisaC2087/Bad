@@ -2,7 +2,7 @@
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -45,10 +45,14 @@ jobs:
           ${{ runner.temp }}\scanner\dotnet-sonarscanner begin `
             /k:"LuisaC2087_BadCleanArch" `
             /o:"luisac2087" `
+            /d:sonar.token="$env:SONAR_TOKEN" `
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
 
           dotnet build
 
-          dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner end
+          dotnet test --no-build `
+            /p:CollectCoverage=true `
+            /p:CoverletOutputFormat=opencover `
+            /p:CoverletOutput=./TestResults/coverage.opencover.xml
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner end `
+            /d:sonar.token="$env:SONAR_TOKEN"
