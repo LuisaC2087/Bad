@@ -45,10 +45,12 @@ jobs:
           ${{ runner.temp }}\scanner\dotnet-sonarscanner begin `
             /k:"LuisaC2087_BadCleanArch" `
             /o:"luisac2087" `
+            /d:sonar.token="$env:SONAR_TOKEN" `
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
 
           dotnet build
 
-          dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+          dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner end
+          ${{ runner.temp }}\scanner\dotnet-sonarscanner end `
+            /d:sonar.token="$env:SONAR_TOKEN"
